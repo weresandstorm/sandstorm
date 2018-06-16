@@ -1,0 +1,44 @@
+# mac os hidden files
+**/.DS_Store
+
+# built application files
+*.apk
+*.ap_
+**/*.log
+config.client.*
+diamond_config_data.*
+hsf.log*
+
+*.jpg
+
+# Java class files
+*.class
+
+# generated files
+gen/
+logs/
+log/
+target/
+**/target/
+hsf.configuration/
+configuration/
+
+.git-coding-net/
+.git-youzan/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Eclipse project files
+.project
+.settings
+.classpath
+
+# IDEA project files
+.idea/
+**/*.iml
+
+**/node_modules/
+
+gatling-script/user-files/results/
+
