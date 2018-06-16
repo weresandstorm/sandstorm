@@ -1,0 +1,18 @@
+
+syntax = "proto3";
+
+import "messages.proto";
+
+option java_multiple_files = true;
+option java_package = "io.sandstorm.exchange.api";
+option java_outer_classname = "AgentServiceProto";
+
+service AgentService {
+
+    rpc PrepareFor(TestJobMsg) returns (ResultMsg) {}
+
+    rpc StartTestEngine(TestJobMsg) returns (ResultMsg) {}
+
+    rpc Stop(TestJobMsg) returns (ResultMsg) {}
+
+}

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>io.sandstorm</groupId>
+        <artifactId>sandstorm-controller</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.sandstorm</groupId>
+    <artifactId>controller-infrastructure</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.sandstorm</groupId>
+            <artifactId>sandstorm-exchange-protocol</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.sandstorm</groupId>
+            <artifactId>sandstorm-spi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.sandstorm</groupId>
+            <artifactId>controller-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.novemberain</groupId>
+            <artifactId>quartz-mongodb</artifactId>
+        </dependency>
+
+        <!-- Scope of this dependency is provided -->
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.mysema.maven</groupId>
+                <artifactId>apt-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>michaelklishin</id>
+            <url>https://dl.bintray.com/michaelklishin/maven/</url>
+        </repository>
+    </repositories>
+
+</project>

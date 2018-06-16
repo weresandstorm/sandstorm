@@ -1,0 +1,41 @@
+{
+  "id": "test-task-001",
+  "name": "双十一购物狂欢",
+  "testScript": {
+    "fileName": "ShoppingCarnival.scala",
+    "filePath": "/test-scripts/ShoppingCarnival.scala",
+    "simulationName": "io.sandstorm.ShoppingCarnival"
+  },
+  "dataFiles": [
+    {
+      "no": 1,
+      "name": "shopping-carnival-test-data-1.json",
+      "path": "/test-data/shopping-carnival/shopping-carnival-test-data-1.json"
+    },
+    {
+      "no": 2,
+      "name": "shopping-carnival-test-data-2.json",
+      "path": "/test-data/shopping-carnival/shopping-carnival-test-data-2.json"
+    },
+    {
+      "no": 3,
+      "name": "shopping-carnival-test-data-3.json",
+      "path": "/test-data/shopping-carnival/shopping-carnival-test-data-3.json"
+    }
+  ],
+  "resourcesToDownload": [
+    {
+      "type": "LocalTestScript",
+      "fileName": "ShoppingCarnival.scala",
+      "filePath": "/test-scripts/ShoppingCarnival.scala",
+      "simulationName": "io.sandstorm.ShoppingCarnival"
+    },
+    {
+      "type": "LocalTestDataFile",
+      "no": 3,
+      "name": "shopping-carnival-test-data-3.json",
+      "path": "/test-data/shopping-carnival/shopping-carnival-test-data-3.json"
+    }
+  ],
+  "isResourcesReady": false
+}

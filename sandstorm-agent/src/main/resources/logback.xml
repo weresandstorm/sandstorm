@@ -1,0 +1,120 @@
+<configuration scan="true" scanPeriod=" 5 seconds" debug="false">
+    <jmxConfigurator/>
+
+    <!--应用名-->
+    <property name="APP_NAME" value="sandstorm-agent"/>
+
+    <!--文件名-->
+    <property name="LOG_PATH" value="@sandstorm.agent.log.path@"/>
+    <property name="ROOT_LOG_FILE_NAME" value="root"/>
+    <property name="ERROR_LOG_FILE_NAME" value="error"/>
+    <property name="GATLING_LOG_FILE_NAME" value="gatling"/>
+
+    <property name="FW_OUTPUT_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{56} - %msg%n"/>
+
+    <property name="GATLING_OUTPUT_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{0} - %msg%n"/>
+
+    <!--日志文件大小保留天数控制-->
+    <property name="MAX_DAY" value="30"/>
+    <property name="MAX_SIZE" value="200mb"/>
+    <property name="queueSize" value="512"/>
+
+    <!--控制台输出-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${FW_OUTPUT_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!--全输出(不过滤级别)-->
+    <appender name="ROOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${ROOT_LOG_FILE_NAME}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${LOG_PATH}/%d{yyyy-MM-dd}/${ROOT_LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${MAX_DAY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FW_OUTPUT_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!--错误日志输出-->
+    <appender name="COMMON_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${ERROR_LOG_FILE_NAME}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${LOG_PATH}/%d{yyyy-MM-dd}/${ERROR_LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${MAX_DAY}</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <encoder>
+            <pattern>${FW_OUTPUT_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="GATLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${GATLING_LOG_FILE_NAME}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${GATLING_LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz
+            </fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>1</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>100mb</maxFileSize>
+        </triggeringPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>${GATLING_OUTPUT_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ForkGatling" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_PATH}/fork-gatling.log</file>
+        <append>false</append>
+        <immediateFlush>true</immediateFlush>
+        <encoder>
+            <pattern>${GATLING_OUTPUT_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.apache.commons.exec" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="ForkGatling"/>
+    </logger>
+
+    <logger name="io.sandstorm.agent.portadapter.gatling" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="GATLING"/>
+    </logger>
+
+    <logger name="io.sandstorm" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="ROOT"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="COMMON_ERROR"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="ROOT"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="COMMON_ERROR"/>
+    </root>
+</configuration>

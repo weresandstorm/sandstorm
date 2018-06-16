@@ -1,0 +1,10 @@
+{
+  "scnRepeatTimes": 1000,
+  "userInjectSteps": [
+    {
+      "totalUsers": 6000,
+      "rateUps": 200,
+      "duration": 30
+    }
+  ]
+}

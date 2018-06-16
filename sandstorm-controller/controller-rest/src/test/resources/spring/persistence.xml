@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="mongoClient" class="io.sandstorm.controller.portadapter.persist.mgo.spring.MongoClientFactoryBean">
+        <property name="host" value="localhost" />
+        <property name="port" value="27017" />
+    </bean>
+
+    <bean id="mongoDbFactory" class="io.sandstorm.controller.portadapter.persist.mgo.spring.SimpleMongoDbFactory">
+        <constructor-arg name="mongo" ref="mongoClient" />
+        <constructor-arg name="databaseName" value="xiaoqiao" />
+    </bean>
+
+</beans>

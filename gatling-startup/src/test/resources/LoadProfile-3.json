@@ -1,0 +1,15 @@
+{
+  "scnRepeatTimes": 1000,
+  "rpsThrotSteps": [
+    {
+      "rampTime": 10,
+      "toRps": 10000,
+      "holdTime": 10
+    },
+    {
+      "rampTime": 20,
+      "toRps": 20000,
+      "holdTime": 10
+    }
+  ]
+}

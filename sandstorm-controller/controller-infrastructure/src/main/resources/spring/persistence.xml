@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="customEditorConfigurer" class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+        <property name="customEditors">
+            <map>
+                <entry key="com.mongodb.ServerAddress[]" value="io.sandstorm.controller.portadapter.persist.mgo.spring.ServerAddressPropertyEditor"/>
+                <entry key="com.mongodb.MongoCredential[]" value="io.sandstorm.controller.portadapter.persist.mgo.spring.MongoCredentialPropertyEditor"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="mongoClientOptions" class="io.sandstorm.controller.portadapter.persist.mgo.spring.MongoClientOptionsFactoryBean">
+        <!-- Connection timeout in milliseconds that is used solely when establishing a new connection -->
+        <property name="connectTimeout" value="10000"/>
+        <!-- Maximum wait time in milliseconds that a thread may wait for a connection to become available -->
+        <property name="maxWaitTime" value="3000" />
+        <!-- Timeout in milliseconds used for I/O socket read and write operations -->
+        <property name="socketTimeout" value="1000" />
+    </bean>
+
+    <bean id="mongoClient" class="io.sandstorm.controller.portadapter.persist.mgo.spring.MongoClientFactoryBean">
+        <property name="host" value="${mongo.host}"/>
+        <property name="port" value="${mongo.port}"/>
+        <property name="credentials" value="${mongo.credentials}"/>
+        <property name="mongoClientOptions" ref="mongoClientOptions" />
+    </bean>
+
+    <bean id="morphia" class="io.sandstorm.controller.portadapter.persist.mgo.spring.MorphiaFactoryBean">
+        <property name="singleton" value="true"/>
+        <property name="ignoreInvalidClasses" value="true"/>
+    </bean>
+
+    <bean id="datastore"
+          class="io.sandstorm.controller.portadapter.persist.mgo.spring.DataStoreFactoryBean">
+        <property name="singleton" value="true"/>
+        <property name="morphia" ref="morphia"/>
+        <property name="mongo" ref="mongoClient"/>
+        <property name="dbName" value="${mongo.db.name}"/>
+    </bean>
+
+</beans>

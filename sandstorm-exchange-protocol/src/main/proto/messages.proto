@@ -1,0 +1,74 @@
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.sandstorm.exchange.api.msg";
+option java_outer_classname = "TestTaskProto";
+
+message ResultMsg {
+    int32 code = 1;
+    string message = 2;
+}
+
+message ResultNotifyMsg {
+    string id = 1;
+    ResultMsg result = 2;
+}
+
+message VoidMsg {
+}
+
+message LoadInjectorMsg {
+    string hostname = 1;
+    int32 port = 2;
+    string intranet_ip = 3;
+    string public_ip = 4;
+}
+
+message TestScriptMsg {
+    string jar_alias = 1;
+    string jar_url = 2;
+}
+
+message DataSetMsg {
+    string feeder_file_name = 1;
+    repeated DataChunkMsg chunks = 2;
+}
+
+message DataChunkMsg {
+    int32 no = 1;
+    string url = 2;
+    string signature = 3;
+}
+
+message TestJobMsg {
+    string id = 1;
+    string super_job_id = 2;
+    TestScriptMsg script = 3;
+    string simulation_to_run = 4;
+    DataSetMsg data_set = 5;
+    LoadProfileMsg load_profile = 6;
+}
+
+message LoadProfileMsg {
+    int64 scn_repeat_times = 1;
+    repeated UserInjectStepMsg user_inject_steps = 2;
+    repeated RpsThrotStepMsg rps_throt_steps = 3;
+}
+
+message UserInjectStepMsg {
+    int64 total_users = 1;
+    int64 rate_ups = 2;
+    int64 duration = 3;
+}
+
+message RpsThrotStepMsg {
+    int64 ramp_time = 1;
+    int64 to_rps = 2;
+    int64 hold_time = 3;
+}
+
+message JobIdMsg {
+    string id = 1;
+}
+
