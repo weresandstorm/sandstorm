@@ -1,0 +1,28 @@
+{
+  "title": "TestScript",
+  "type": "object",
+  "properties": {
+    "hostname": {
+      "type": "string",
+      "format": "hostname"
+    },
+    "port": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 65535
+    },
+    "intranetIp": {
+      "type": "string",
+      "format": "ipv4"
+    },
+    "publicIp": {
+      "type": "string",
+      "format": "ipv4"
+    },
+    "state": {
+      "type": "string",
+      "enum": ["usable", "in_use"]
+    }
+  },
+  "required": ["hostname", "port", "intranetIp"]
+}

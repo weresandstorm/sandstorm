@@ -1,0 +1,39 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "",
+    "version": ""
+  },
+  "servers": [
+    {
+      "url": "http://apis.sandstorm.io",
+      "description": "Restful api server"
+    }
+  ],
+  "paths": {
+    "/load-injectors": {
+      "post": {
+        "summary": "Create load-injector",
+        "operationId": "createLoadInjector",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "api/load-injector-schema.json"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "OK"
+          },
+          "5XX": {
+            "description": "Server internal error."
+          }
+        }
+      }
+    }
+  }
+}
