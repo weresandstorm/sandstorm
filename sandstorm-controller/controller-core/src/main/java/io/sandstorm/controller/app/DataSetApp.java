@@ -52,7 +52,6 @@ public class DataSetApp {
                 "%s with feederFileName %s already exists",
                 DataSet.class.getSimpleName(), createCmd.feederFileName()
         );
-
         List<DataSetStorage.Chunk> chunks = storeDataChunks(createCmd, DataSet.initial_revision);
         DataSet dataSet = new DataSet(
                 createCmd.feederFileName(),
@@ -142,9 +141,9 @@ public class DataSetApp {
             chunks = dataSetStorage.put(command.feederFileName(), command.sourceUrl().get(), dataSetRevision);
         } else {
             List<InputStream> sourceStreams = command.dataChunks()
-                    .stream()
-                    .map(tempFile -> localTempStorage.get(tempFile))
-                    .collect(Collectors.toList());
+                .stream()
+                .map(tempFile -> localTempStorage.get(tempFile))
+                .collect(Collectors.toList());
             chunks = dataSetStorage.put(command.feederFileName(), sourceStreams, dataSetRevision);
             localTempStorage.remove(command.dataChunks());
         }

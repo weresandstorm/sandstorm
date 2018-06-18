@@ -14,7 +14,9 @@ import io.sandstorm.controller.app.LocalTempStorage;
 import io.sandstorm.controller.app.TempFile;
 import io.sandstorm.controller.domain.resource.DataChunk;
 import io.sandstorm.controller.domain.resource.DataSet;
+import io.sandstorm.rest.common.JsonSchemaFactory;
 import org.bson.types.ObjectId;
+import org.everit.json.schema.Schema;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -69,8 +71,8 @@ public class DataSetRest {
 
     @PostMapping
     public void create(@RequestBody DataSetCmd.Create createCmd) {
-        notNull(createCmd, "dataSet in request body");
-        createCmd.validate();
+        Schema schema = JsonSchemaFactory.getSchema("DataSetCreateCmd.json");
+        schema.validate(createCmd);
         dataSetApp.createDataSet(createCmd);
     }
 

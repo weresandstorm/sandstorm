@@ -1,120 +1,72 @@
 package io.sandstorm.controller.app;
 
-import io.sandstorm.common.ValueChecks;
-import io.sandstorm.controller.domain.resource.DataSet;
-import org.bson.types.ObjectId;
+import static io.sandstorm.common.InputAssert.notBlank;
+import static io.sandstorm.common.InputAssert.notNull;
 
-import java.util.Collections;
+import com.fasterxml.jackson.core.type.TypeReference;
+import io.sandstorm.controller.domain.resource.DataSet;
+import io.sandstorm.controller.domain.resource.DataSet.SourceType;
 import java.util.List;
 import java.util.Optional;
-
-import static io.sandstorm.common.InputAssert.*;
+import org.bson.types.ObjectId;
+import org.json.JSONObject;
 
 public abstract class DataSetCmd {
 
     private DataSetCmd() {
     }
 
-    public static abstract class CreateOrUpdate {
+    public static abstract class CreateOrUpdate extends JSONObject {
 
-        private static final int NAME_MAX_LEN = 30;
-        private static final int DESC_MAX_LEN = 80;
-
-        private String feederFileName;
-        private String desc;
-        private DataSet.SourceType sourceType;
-        private Optional<String> sourceUrl = Optional.empty();
-        private List<TempFile> dataChunks = Collections.emptyList();
-        private String operator;
-
-        public String feederFileName() {
-            return feederFileName;
+        public String feederFileName(){
+            return getString("feederFileName");
         }
-
-        /**
-         * This method is for json deserializer.
-         *
-         * @param sourceUrl
-         */
-        public void setSourceUrl(String sourceUrl) {
-            this.sourceUrl = Optional.ofNullable(sourceUrl);
+        public String desc(){
+            return getString("desc");
         }
-
-        public String desc() {
-            return desc;
+        public Optional<String> sourceUrl(){
+            return Optional.of(getString("sourceUrl"));
         }
-
-        public DataSet.SourceType sourceType() {
-            return sourceType;
+        public SourceType sourceType(){
+            return getEnum(SourceType.class, "sourceType");
         }
-
-        public Optional<String> sourceUrl() {
-            return sourceUrl;
+        public String operator(){
+            return getString("operator");
         }
-
-        public List<TempFile> dataChunks() {
-            return dataChunks;
-        }
-
-        public String operator() {
-            return this.operator;
-        }
-
-        public void validate() {
-            notBlank(feederFileName, "feederFileName");
-            lenLte(feederFileName, "feederFileName", NAME_MAX_LEN);
-            fileNameAndExt(feederFileName, "feederFileName");
-
-            if (ValueChecks.notBlank(desc)) {
-                lenLte(desc, "desc", DESC_MAX_LEN);
-            }
-
-            notBlank(operator, "operator");
+        public List<TempFile> dataChunks(){
+            TypeReference<List<TempFile>> ref = new TypeReference() { };
+            return CommandConverter.convert(getJSONObject("dataChunks"),ref);
         }
 
         protected void checkSource() {
-            notNull(sourceType, "sourceType");
-            if (DataSet.SourceType.url == sourceType) {
-                notBlank(sourceUrl.orElse(null), "sourceUrl");
+            if (DataSet.SourceType.url == sourceType()) {
+                notBlank(sourceUrl().orElse(null), "sourceUrl");
             } else {
-                notEmpty(dataChunks, "dataChunks");
-                for (TempFile tempFile : dataChunks) {
-                    tempFile.validate();
-                }
+                notNull(dataChunks(), "dataChunks");
             }
         }
     }
 
     public static class Create extends CreateOrUpdate {
-        @Override
-        public void validate() {
-            super.validate();
+
+        public void validate(){
             checkSource();
         }
     }
 
     public static class Update extends CreateOrUpdate {
 
-        private Optional<ObjectId> id = Optional.empty();
-        private Boolean contentChanged;
-
-        public void setId(ObjectId id) {
-            this.id = Optional.ofNullable(id);
-        }
 
         public ObjectId id() {
-            return id.get();
+            return new ObjectId(getString("id"));
         }
 
         public boolean contentChanged() {
-            return contentChanged;
+            return getBoolean("contentChanged");
         }
 
         public void validate() {
-            notNull(id.orElse(null), "id");
-            super.validate();
-            notNull(contentChanged, "contentChanged");
-            if (contentChanged) {
+            if (contentChanged()) {
                 checkSource();
             }
         }

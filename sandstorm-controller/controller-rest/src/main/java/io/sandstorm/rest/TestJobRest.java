@@ -3,13 +3,15 @@ package io.sandstorm.rest;
 import io.sandstorm.common.query.domain.Existence;
 import io.sandstorm.common.query.domain.Page;
 import io.sandstorm.common.query.domain.SimplePagingQParams;
+import io.sandstorm.controller.app.TestJobCmd;
+import io.sandstorm.rest.common.JsonSchemaFactory;
 import io.sandstorm.rest.validation.LoadProfileValidator;
-import io.sandstorm.rest.validation.TestJobValidator;
 import io.sandstorm.controller.app.FindService;
 import io.sandstorm.controller.app.TestJobApp;
 import io.sandstorm.controller.domain.job.RunJobCmd;
 import io.sandstorm.controller.domain.job.TestJob;
 import org.bson.types.ObjectId;
+import org.everit.json.schema.Schema;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -40,10 +42,10 @@ public class TestJobRest {
     }
 
     @PostMapping
-    public void create(@RequestBody TestJob.Builder builder) {
-        notNull(builder, "testPlan in request body");
-        builder.accept(TestJobValidator.object);
-        testJobApp.createJob(builder);
+    public void create(@RequestBody TestJobCmd.Create createCmd) {
+        Schema schema = JsonSchemaFactory.getSchema("TestJobCreateCmd.json");
+        schema.validate(createCmd);
+        testJobApp.createJob(createCmd);
     }
 
     @GetMapping
@@ -60,11 +62,10 @@ public class TestJobRest {
 
     @PatchMapping("/{id}")
     public void update(@PathVariable("id") ObjectId id,
-                       @RequestBody TestJob.Builder builder) {
-        notNull(id, "id");
-        notNull(builder, "testPlan in request body");
-        builder.accept(TestJobValidator.object);
-        testJobApp.updateJob(id, builder);
+                       @RequestBody TestJobCmd.Update updateCmd) {
+        Schema schema = JsonSchemaFactory.getSchema("TestJobCreateCmd.json");
+        schema.validate(updateCmd);
+        testJobApp.updateJob(id, updateCmd);
     }
 
     @PostMapping("/{id}/actions/run")

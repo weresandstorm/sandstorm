@@ -4,6 +4,8 @@ import io.sandstorm.common.ApplicationException;
 import io.sandstorm.common.CaseCode;
 import io.sandstorm.common.ResultCase;
 import io.sandstorm.common.ViolateBizConstraintException;
+import java.util.stream.Collectors;
+import org.everit.json.schema.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -55,6 +57,25 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         HttpHeaders headers = new HttpHeaders();
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         RestApiResult body = RestApiResult.failure(ex.resultCase());
+        return handleExceptionInternal(ex, body, headers, status, webReq);
+    }
+
+    //handle exception of json schema validation
+    @ExceptionHandler({ValidationException.class})
+    public final ResponseEntity<Object> handleValidationException(
+        ValidationException ex,
+        HttpServletRequest request,
+        WebRequest webReq) {
+        logThrowable(ex, request);
+
+        HttpHeaders headers = new HttpHeaders();
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StringBuilder messageBuilder = new StringBuilder("");
+        ex.getCausingExceptions().stream()
+            .map(ValidationException::getMessage)
+            .forEach(msg -> messageBuilder.append(msg));
+        RestApiResult body = RestApiResult.failure(new ResultCase(CaseCode.illegal_api_input, messageBuilder.toString()));
+
         return handleExceptionInternal(ex, body, headers, status, webReq);
     }
 

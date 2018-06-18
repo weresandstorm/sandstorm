@@ -15,7 +15,9 @@ import io.sandstorm.controller.domain.job.RunJobCmd;
 import io.sandstorm.controller.domain.job.TestJob;
 import io.sandstorm.controller.domain.job.TestJobRepo;
 import io.sandstorm.controller.domain.resource.DataSetRepo;
+import io.sandstorm.controller.domain.resource.TestScript;
 import io.sandstorm.controller.domain.resource.TestScriptRepo;
+import java.util.function.Function;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
@@ -47,13 +49,9 @@ public class TestJobApp {
         return new Existence(exist);
     }
 
-    public void createJob(TestJob.Builder builder) {
-        assertNameNotExist(builder.getName());
-        builder.setScript(testScriptRepo.get(builder.getScriptId()));
-        if (builder.getDataSetId().isPresent()) {
-            builder.setDataSet(dataSetRepo.get(builder.getDataSetId().get()));
-        }
-        TestJob testJob = builder.build();
+    public void createJob(TestJobCmd.Create createCmd) {
+        TestJob testJob = createCmd.toTestJob(scriptId -> testScriptRepo.get(scriptId),
+            dataSetId -> dataSetRepo.get(dataSetId));
         testJob.beginDomainLifeCycle();
         testJobRepo.save(testJob);
 
@@ -66,10 +64,9 @@ public class TestJobApp {
         return testJobRepo.get(id);
     }
 
-    public void updateJob(ObjectId id, TestJob.Builder builder) {
-        assertNameNotExist(builder.getName());
+    public void updateJob(ObjectId id, TestJobCmd.Update update) {
         TestJob testJob = testJobRepo.get(id);
-        testJob.mergeFrom(builder);
+        testJob.mergeFrom(update);
         testJobRepo.save(testJob);
     }
 

@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "description": "command to update a dataSet",
+  "title": "command to update a dataSet",
+  "type": "object",
+  "required": ["id","feederFileName", "desc", "operator","contentChanged"],
+  "properties": {
+    "id":{
+      "type":"string"
+    },
+    "feederFileName":{
+      "type":"string",
+      "pattern":"^[a-zA-Z0-9_\\-]+(\\.[a-zA-Z0-9]+)$",
+      "max":30
+    },
+    "desc":{
+      "type":"string",
+      "max":80
+    },
+    "operator":{
+      "type":"string"
+    },
+    "contentChanged":{
+      "type":"boolean"
+    },
+    "sourceUrl":{
+      "type":"string"
+    },
+    "sourceType":{
+      "type":"string",
+      "enum": ["url", "manual_upload"]
+    },
+    "dataChunks":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["path"],
+        "properties":{
+          "path":{
+            "type":"string"
+          }
+        }
+      }
+    }
+
+  }
+}

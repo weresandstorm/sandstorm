@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "description": "command to update a testJob",
+  "title": "TestJobUpdateCmd",
+  "type": "object",
+  "required": ["name", "remark"],
+  "properties": {
+    "name":{
+      "type":"string",
+      "max":30
+    },
+    "remark":{
+      "type":"string",
+      "max":80
+    }
+  }
+}

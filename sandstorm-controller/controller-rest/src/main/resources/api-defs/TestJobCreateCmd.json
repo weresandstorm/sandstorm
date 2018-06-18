@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "description": "command to create a testJob",
+  "title": "TestJobCreateCmd",
+  "type": "object",
+  "required": ["name", "scriptId","simulationToRun","loadProfile"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "max":30
+    },
+    "scriptId": {
+      "type": "string"
+    },
+    "simulationToRun":{
+      "type":"string",
+      "pattern":"^([a-zA-Z0-9_]+\\.)*[a-zA-Z0-9_]+$"
+    },
+    "dataSetId":{
+      "type":"string"
+    },
+    "remark":{
+      "type":"string",
+      "max":80
+    },
+    "loadProfile":{
+      "$ref":"#/definitions/LoadProfile"
+    }
+
+  },
+  "definitions":{
+    "LoadProfile":{
+      "type":"object",
+      "required":["totalInjectors","scnRepeatTimes","execPlan"],
+      "properties":{
+        "totalInjectors":{
+          "type":"integer",
+          "min":1
+        },
+        "scnRepeatTimes":{
+          "type":"integer",
+          "min":0
+        },
+        "userInjectSteps":{
+          "type":"array",
+          "items":{
+            "type":"object",
+            "properties":{
+              "totalUsers":{
+                "type":"integer",
+                "min":1
+              },
+              "rateUps":{
+                "type":"integer",
+                "min":0
+              },
+              "duration":{
+                "type":"integer",
+                "min":0
+              }
+            },
+            "required":["totalUsers","rateUps","duration"]
+          }
+        },
+        "rpsThrotSteps":{
+          "type":"array",
+          "items":{
+            "type":"object",
+            "required":["rampTime","toRps","holdTime"],
+            "properties":{
+              "rampTime":{
+                "type":"integer",
+                "min":0
+              },
+              "toRps":{
+                "type":"integer",
+                "min":1
+              },
+              "holdTime":{
+                "type":"integer",
+                "min":1
+              }
+            }
+          }
+        },
+        "execPlan":{
+          "type":"object",
+          "required":["execMode"],
+          "properties":{
+            "execMode":{
+              "type":"string",
+              "enum": ["on_demand", "periodic"]
+            },
+            "execRate":{
+              "type":"object",
+              "required":["startMonth","monthInterval","lastDayOfWeek","hour","minute"],
+              "properties":{
+                "startMonth":{
+                  "type":"integer",
+                  "min":1,
+                  "max":12
+                },
+                "monthInterval":{
+                  "type":"integer",
+                  "min":1,
+                  "max":12
+                },
+                "lastDayOfWeek":{
+                  "type":"integer",
+                  "min":1,
+                  "max":7
+                },
+                "hour":{
+                  "type":"integer",
+                  "min":0,
+                  "max":23
+                },
+                "minute":{
+                  "type":"integer",
+                  "min":0,
+                  "max":59
+                }
+              }
+            }
+
+          }
+        },
+        "remark":{
+          "type":"string",
+          "max":80
+        }
+      }
+
+    }
+  }
+
+}
+

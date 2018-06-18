@@ -11,6 +11,7 @@ public enum CaseCode {
     violate_biz_constraint("3"),
     upload_io_error("4"),
     internal_error("15"),
+    load_schema_error("16"),
 
     // test-script: 20-24
     script_undeletable("20"),

@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "description": "command to create a dataSet",
+  "title": "command to create a dataSet",
+  "type": "object",
+  "required": ["feederFileName", "desc", "sourceUrl", "operator"],
+  "properties": {
+    "feederFileName":{
+      "type":"string",
+      "pattern":"^[a-zA-Z0-9_\\-]+(\\.[a-zA-Z0-9]+)$",
+      "max":30
+    },
+    "desc":{
+      "type":"string",
+      "max":80
+    },
+    "sourceUrl":{
+      "type":"string"
+    },
+    "sourceType":{
+      "type":"string",
+      "enum": ["url", "manual_upload"]
+    },
+    "dataChunks":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["path"],
+        "properties":{
+          "path":{
+            "type":"string"
+          }
+        }
+      }
+    },
+    "operator":{
+      "type":"string"
+    }
+  }
+}
